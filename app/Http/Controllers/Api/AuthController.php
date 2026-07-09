@@ -82,12 +82,25 @@ class AuthController extends Controller
     {
         $request->validate(['email' => ['required', 'email']]);
 
+        $user = User::where('email', $request->email)->first();
         $status = Password::sendResetLink($request->only('email'));
 
-        return response()->json([
+        $payload = [
             'status' => $status === Password::RESET_LINK_SENT ? 'reset-link-sent' : 'failed',
             'message' => __($status),
-        ], $status === Password::RESET_LINK_SENT ? 200 : 422);
+        ];
+
+        if ($status === Password::RESET_LINK_SENT && $user) {
+            $token = Password::broker()->createToken($user);
+            $payload['reset_link'] = route('password.reset', ['token' => $token, 'email' => $user->email]);
+
+            Log::info('Password reset link generated', [
+                'email' => $user->email,
+                'reset_link' => $payload['reset_link'],
+            ]);
+        }
+
+        return response()->json($payload, $status === Password::RESET_LINK_SENT ? 200 : 422);
     }
 
     public function resetPassword(Request $request): JsonResponse
