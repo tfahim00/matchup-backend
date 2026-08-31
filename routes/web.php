@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\testController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +14,6 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 })->name('home');
-
-Route::get('/test', [testController::class, 'index'])->name('test');
-
-Route::get('/login-test', function () {
-    return view('login-test');
-})->name('login-test');
 
 Route::get('/reset-password/{token}', function (string $token, Request $request) {
     return view('reset-password', [
@@ -47,6 +40,6 @@ Route::post('/password/update', function (Request $request) {
     );
 
     return $status === Password::PASSWORD_RESET
-        ? redirect('/login-test')->with('status', __($status))
+        ? redirect('/')->with('status', __($status))
         : back()->withErrors(['email' => __($status)]);
 })->name('password.update');

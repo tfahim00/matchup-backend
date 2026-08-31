@@ -13,4 +13,11 @@ class PasswordResetRouteTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Reset Your Password');
     }
+
+    public function test_debug_routes_are_not_exposed(): void
+    {
+        $this->get('/test')->assertNotFound();
+        $this->get('/login-test')->assertNotFound();
+        $this->get('/api/log-test')->assertNotFound();
+    }
 }

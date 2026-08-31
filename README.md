@@ -56,3 +56,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## API: Nearby Search
+
+The `/api/matches` endpoint supports a simple nearby-search using latitude/longitude and the Haversine formula.
+
+- Query parameters:
+	- `lat` — latitude of the search origin (required for nearby search)
+	- `lng` — longitude of the search origin (required for nearby search)
+	- `radius` — radius in kilometers to search within (optional, defaults to `10`)
+
+- Response: when `lat` and `lng` are provided, each match will include a `distance` field (in kilometers, rounded to 2 decimals).
+
+Example request:
+
+```bash
+curl "http://localhost:8000/api/matches?lat=51.5074&lng=-0.1278&radius=10" \
+	-H "Accept: application/json"
+```
+
+If `lat`/`lng` are not provided, the endpoint falls back to the default listing behavior (latest matches first).

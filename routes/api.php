@@ -2,13 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MatchController;
 use App\Http\Controllers\Api\PlayerProfileController;
-use Illuminate\Support\Facades\Log;
-
-Route::get('/log-test', function () {
-    Log::info('Route reached');
-    return 'OK';
-});
+use App\Http\Controllers\Api\TeamController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -23,6 +19,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('profile', [PlayerProfileController::class, 'create']);
     Route::get('profile', [PlayerProfileController::class, 'show']);
     Route::put('profile', [PlayerProfileController::class, 'update']);
+
+    // Team management
+    Route::apiResource('teams', TeamController::class);
+    Route::get('teams/{team}/members', [TeamController::class, 'members']);
+    Route::post('teams/{team}/members', [TeamController::class, 'addMember']);
+    Route::delete('teams/{team}/members/{member}', [TeamController::class, 'removeMember']);
+
+    // Match management
+    Route::get('matches', [MatchController::class, 'index']);
+    Route::post('matches', [MatchController::class, 'store']);
+    Route::get('matches/{match}', [MatchController::class, 'show']);
+    Route::post('matches/{match}/join', [MatchController::class, 'join']);
+    Route::post('matches/{match}/leave', [MatchController::class, 'leave']);
 });
 
 // Public player profile (no auth required)

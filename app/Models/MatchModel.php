@@ -27,4 +27,9 @@ class MatchModel extends Model
     {
         return $this->hasMany(MatchParticipant::class, 'match_id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'match_participants', 'match_id', 'user_id')->withTimestamps();
+    }
 }
