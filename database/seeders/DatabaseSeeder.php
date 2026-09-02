@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(\Database\Seeders\NearbySearchSeeder::class);
+        $this->call(\Database\Seeders\LocationsSeeder::class);
     }
 }

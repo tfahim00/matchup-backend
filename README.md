@@ -532,6 +532,60 @@ curl -X POST http://localhost:8000/api/matches/1/leave \
   -H "Authorization: Bearer <token>"
 ```
 
+## Location APIs
+
+### 1) Search locations (public)
+
+**Endpoint:** `GET /api/locations`
+
+**Query params:**
+- `q` — text query (name, address, city, district)
+- `lat` — latitude (optional for nearby search)
+- `lng` — longitude (optional for nearby search)
+- `radius` — radius in kilometers (default: `5`) when `lat`+`lng` provided
+- `per_page` — pagination size (default: `15`)
+
+**Example (nearby):**
+
+```bash
+curl "http://localhost:8000/api/locations?lat=23.8103&lng=90.4125&radius=5" \
+  -H "Accept: application/json"
+```
+
+When `lat` and `lng` are provided, each result includes a `distance` field (in km).
+
+### 2) Create a location (auth required)
+
+**Endpoint:** `POST /api/locations`
+
+**Auth required:** Yes (`Authorization: Bearer <token>`)
+
+**Request body:**
+
+```json
+{
+  "name": "X Ground",
+  "address": "123 Field St",
+  "city": "Dhaka",
+  "district": "Dhanmondi",
+  "latitude": 23.7806,
+  "longitude": 90.4076
+}
+```
+
+Latitude and longitude are optional but must be provided together.
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:8000/api/locations \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"X Ground","address":"123 Field St","city":"Dhaka","latitude":23.7806,"longitude":90.4076}'
+```
+
+
 ---
 
 ## Response format example

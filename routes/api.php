@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MatchController;
 use App\Http\Controllers\Api\PlayerProfileController;
 use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\LocationController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -32,8 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('matches/{match}', [MatchController::class, 'show']);
     Route::post('matches/{match}/join', [MatchController::class, 'join']);
     Route::post('matches/{match}/leave', [MatchController::class, 'leave']);
+    // Locations (create requires auth)
+    Route::post('locations', [LocationController::class, 'store']);
 });
 
 // Public player profile (no auth required)
 Route::get('players/{id}', [PlayerProfileController::class, 'showPublic']);
+
+// Public locations search
+Route::get('locations', [LocationController::class, 'index']);
 
